@@ -41,7 +41,6 @@ class Board extends React.Component {
                 {
                 this.renderBoard(3, 3)
                 }
-
             </div>
         );
     }
@@ -57,6 +56,7 @@ class Game extends React.Component {
             }],
             xIsNext: true,
             stepNumber: 0,
+            isDescending: true,
         };
     }
 
@@ -87,22 +87,34 @@ class Game extends React.Component {
         });
     }
 
-    render() {
+    reverseMoveOrder(){
+        this.setState({
+            isDescending: !this.state.isDescending,
+        });
+    }
+
+    renderMoves(){
         const history = this.state.history;
-        const current = history[this.state.stepNumber];
-        const winner = calculateWinner(current.squares);
-
-
-        const moves = history.map((step, move) => {
+        var movesList = [];
+        history.map((step, move) => {
             const desc = move ?
                 `Go to move #${move} at (${history[move].location[0]}, ${history[move].location[1]})` :
                 "Go to game start";
-            return (
+            movesList.unshift(
                 <li key={move}>
                     <button className={(move == this.state.stepNumber) ? 'latest_move' : ''} onClick={() => this.jumpTo(move)}>{desc}</button>
                 </li>
             );
         });
+        return movesList;
+    }
+
+    render() {
+        const history = this.state.history;
+        const current = history[this.state.stepNumber];
+        const winner = calculateWinner(current.squares);
+
+        var moves = this.renderMoves();
 
         let status;
         if (winner) {
@@ -122,7 +134,11 @@ class Game extends React.Component {
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
-                    <ol>{moves}</ol>
+                    <button onClick = {() => {
+                        this.reverseMoveOrder();
+                    }
+                    }>Sort moves</button>
+                    <ol>{(!this.state.isDescending) ? moves : moves.reverse()}</ol>
                 </div>
             </div>
         );

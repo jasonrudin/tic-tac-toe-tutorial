@@ -48,4 +48,8 @@ body {
   .game-info {
     margin-left: 20px;
   }
+
+  .latest_move{
+    font-weight: 600;
+  }
   

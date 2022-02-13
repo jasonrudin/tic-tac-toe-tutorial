@@ -16,30 +16,32 @@ function Square(props) {
 class Board extends React.Component {
     renderSquare(i) {
         return (
-            <Square
+            <Square key={i}
                 value={this.props.squares[i]}
                 onClick={() => this.props.onClick(i)}
             />
         );
     }
+
+    renderBoard(i, j){
+        var rows = [];
+        for (let x = 0; x < i; x++){
+            let cols = [];
+            for (let y = 0; y < j; y++){
+                cols.push(this.renderSquare(x*3 + y));
+            }
+            rows.push(<div className="board-row" key={x}>{cols}</div>)
+        }
+        return rows;
+    }
+
     render() {
         return (
             <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
+                {
+                this.renderBoard(3, 3)
+                }
+
             </div>
         );
     }
@@ -51,7 +53,7 @@ class Game extends React.Component {
         this.state = {
             history: [{
                 squares: Array(9).fill(null),
-                location: Array(2).fill(null), 
+                location: Array(2).fill(null),
             }],
             xIsNext: true,
             stepNumber: 0,
@@ -78,7 +80,7 @@ class Game extends React.Component {
         }
     }
 
-    jumpTo(step){
+    jumpTo(step) {
         this.setState({
             stepNumber: step,
             xIsNext: (step % 2) === 0,
@@ -97,7 +99,7 @@ class Game extends React.Component {
                 "Go to game start";
             return (
                 <li key={move}>
-                    <button className = {(move == this.state.stepNumber) ? 'latest_move' : ''} onClick={() => this.jumpTo(move)}>{desc}</button>
+                    <button className={(move == this.state.stepNumber) ? 'latest_move' : ''} onClick={() => this.jumpTo(move)}>{desc}</button>
                 </li>
             );
         });
@@ -147,12 +149,12 @@ function calculateWinner(squares) {
     return null;
 }
 
-function mapToRowCol(i){
+function mapToRowCol(i) {
     const gridWidth = 3;
     const gridHeight = 3;
 
-    const col = i%gridWidth;
-    const row = Math.floor(i/gridHeight);
+    const col = i % gridWidth;
+    const row = Math.floor(i / gridHeight);
 
     return [row, col];
 }

@@ -54,7 +54,8 @@ body {
   }
   
   .winningSquare{
-    background: #fff;
+    background: rgb(255, 255, 255);
+    color: rgb(66, 142, 255);
     border: 1px solid #999;
     float: left;
     font-size: 24px;

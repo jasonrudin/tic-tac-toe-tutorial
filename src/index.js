@@ -15,10 +15,14 @@ function Square(props) {
 
 class Board extends React.Component {
     renderSquare(i) {
+        var isWinner = false;
+        if(this.props.winningSquares.includes(i)){
+            isWinner = true;
+        }
         return (
             <Square key={i}
                 value={this.props.squares[i]}
-                winningSquare = {true}
+                winningSquare = {isWinner}
                 onClick={() => this.props.onClick(i)}
             />
         );
@@ -114,12 +118,14 @@ class Game extends React.Component {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
+        var winningSquareArray = [];
 
         var moves = this.renderMoves();
 
         let status;
         if (winner) {
             status = 'Winner: ' + current.squares[winner[0]];
+            winningSquareArray = winner;
         }
         else {
             status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
@@ -130,6 +136,7 @@ class Game extends React.Component {
                 <div className="game-board">
                     <Board
                         squares={current.squares}
+                        winningSquares={winningSquareArray}
                         onClick={(i) => this.handleClick(i)}
                     />
                 </div>
